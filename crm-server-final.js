@@ -1,30 +1,10 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { Client } = require('pg');
-const rateLimit = require('express-rate-limit');
-const path = require('path');
+
 
 // ========================================
 // CARGA MANUAL DE VARIABLES DE ENTORNO
 // ========================================
 
-// Cargar dotenv con debug
-require('dotenv').config({ debug: true });
 
-// Si dotenv no funciona, definir manualmente
-const config = {
-  NODE_ENV: process.env.NODE_ENV || 'development',
-  PORT: process.env.PORT || 3000,
-  JWT_SECRET: process.env.JWT_SECRET || '2011.susej',
-  DB_USER: process.env.DB_USER || 'crm_user',
-  DB_HOST: process.env.DB_HOST || 'localhost',
-  DB_NAME: process.env.DB_NAME || 'crm', 
-  DB_PASSWORD: process.env.DB_PASSWORD || '12345',
-  DB_PORT: process.env.DB_PORT || 5432
-};
 
 console.log('🔧 Configuración cargada:', config);
 
@@ -822,7 +802,7 @@ app.get('/api/interacciones', verificarToken, async (req, res) => {
     });
   }
 });
-// En crm-server-final.js - RUTA MEJORADA PARA REPORTES
+// En crm-server-final.js - RUTA PARA REPORTES
 app.get('/api/reportes/clientes', verificarToken, async (req, res) => {
   try {
     const { fechaInicio, fechaFin, estado, asesor, orden } = req.query;
@@ -950,9 +930,7 @@ const registrarAuditoria = async (accion, cliente_id, usuario_id, camposCambiado
   }
 };
 
-// ========================================
-// FUNCIÓN DEFINITIVA PARA OBTENER IP REAL
-// ========================================
+
 
 // ========================================
 // FUNCIÓN MEJORADA PARA OBTENER IP REAL
