@@ -2,7 +2,7 @@
 
 ## 1. 🌟 Resumen del Proyecto y Stack Tecnológico
 
-Este repositorio contiene la versión **Fase 17 (04-11-2025)** del **CRM Solarever**. Es una aplicación monolítica ligera diseñada para la gestión de clientes y asesores, integrando funcionalidades de auditoría, seguimiento de interacciones y un sistema de autenticación de hardware (RFID).
+Este repositorio contiene la versión **Fase 17 (04-11-2025)** del **CRM Solarever**. Es una aplicación monolítica ligera pensada en sistemas BPM diseñada para la gestión de clientes y asesores, integrando funcionalidades de auditoría, seguimiento de interacciones y un sistema de autenticación de hardware (RFID).
 
 ### Stack Tecnológico
 
@@ -142,3 +142,4 @@ El módulo **ESP32/MFRC522** se comunica con el *backend* de forma directa.
 * **Documentación:** Añadidos comentarios **JSDoc** exhaustivos en archivos clave del Frontend y Backend.
 * **Seguridad:** Añadidas recomendaciones de seguridad en variables de entorno y migración de claves de terceros.
 * **Funcionalidad:** Implementación final de la lógica de *polling* RFID en `login.html`.
+
