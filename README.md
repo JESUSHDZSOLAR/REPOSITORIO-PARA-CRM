@@ -112,7 +112,6 @@ El módulo **ESP32/MFRC522** se comunica con el *backend* de forma directa.
 
 | Archivo | Funcionalidad Clave | Nota de Seguridad Crítica |
 | :--- | :--- | :--- |
-| **`index.html`** | Formulario de Alta de Cliente. | La clave API de ImgBB está expuesta en el código. **Recomendación:** Migrar la subida de archivos al **Backend** para ocultar la clave. |
 | **`login.html`** | Autenticación Estándar y RFID. | Lógica de `polling` y `resetearEstadoRFID()` para la comunicación con el hardware. |
 | **`nuevo - copia.html`** | Listado, Edición y Reportes. | Utiliza `jspdf` para generación de documentos y gestión de *modals* de edición. |
 
@@ -148,6 +147,7 @@ Para reportar issues o solicitar soporte técnico, contactar al equipo de desarr
 Para reportar issues o solicitar soporte técnico, contactar al equipo de desarrollo.
 
 ¡CRM Solar - Potenciando tu gestión de clientes! 🚀
+
 
 
 
