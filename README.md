@@ -147,7 +147,8 @@ Para reportar issues o solicitar soporte técnico, contactar al equipo de desarr
 ##Soporte y Contacto
 Para reportar issues o solicitar soporte técnico, contactar al equipo de desarrollo.
 
-¡CRM Solarever - Potenciando tu gestión de clientes! 🚀
+¡CRM Solar - Potenciando tu gestión de clientes! 🚀
+
 
 
 
