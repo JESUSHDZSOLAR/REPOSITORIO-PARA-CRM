@@ -1,83 +1,144 @@
-# Proyecto SOLAREVER - Panel Administrativo
+# 🚀 README.md: SOLAREVER CRM - FASE 17 (COMPLETO)
 
-Resumen
---------
-Este repositorio contiene la interfaz frontend del panel administrativo (archivos HTML/JS) y un backend Node/Express de soporte. El frontend incluye formularios para crear y editar clientes, subir documentos de soporte (CFE) a ImgBB y visualizar/editar registros.
+## 1. 🌟 Resumen del Proyecto y Stack Tecnológico
 
-Archivos clave
---------------
-- `index.html`            : Formulario de creación de cliente y funcionalidad principal de subida a ImgBB.
-- `nuevo - copia.html`    : Panel administrativo completo con lista de clientes, edición, reportes y auditoría. (Contiene la lógica de edición y vista previa de documentos).
-- `crm-server-final.js`   : Backend Node/Express usado por la aplicación (puerto por defecto 3000 en las referencias del frontend).
+Este repositorio contiene la versión **Fase 17 (04-11-2025)** del **CRM Solarever**. Es una aplicación monolítica ligera diseñada para la gestión de clientes y asesores, integrando funcionalidades de auditoría, seguimiento de interacciones y un sistema de autenticación de hardware (RFID).
 
-Resumen del flujo de subida de documentos (CFE)
-----------------------------------------------
-1. El usuario selecciona un archivo en el input `#document-upload` (o `#edit-document-upload` en el formulario de edición).
-2. El frontend crea un `FormData` y hace POST a `https://api.imgbb.com/1/upload` con la API key.
-3. Si la respuesta es exitosa, la URL devuelta se guarda en el campo oculto `#imgbb-url` (o `#edit-imgbb-url`) y en `localStorage` con la clave `ultimoDocumentoCFE`.
-4. La UI muestra una vista previa y un enlace al documento (`#document-preview` / `#edit-document-preview`).
+### Stack Tecnológico
 
-Importante: seguridad de la API key
-----------------------------------
-Actualmente la API key de ImgBB (`IMGBB_API_KEY`) está definida en el código cliente para facilitar pruebas. Esto expone la clave públicamente y no es recomendado para producción.
-Recomendaciones:
-- Mover la lógica de subida al backend y usar la clave en el servidor.
-- Alternativamente, crear un endpoint en el backend que acepte el archivo y lo suba a ImgBB, devolviendo solo la URL al cliente.
-
-Cómo probar localmente (navegador)
-----------------------------------
-1. Servir los archivos estáticos con un servidor local (no uses `file://` para evitar problemas con algunos APIs y CORS). Por ejemplo, con Python 3:
-
-```powershell
-# Desde la raíz del proyecto
-python -m http.server 5500
-# Luego abre en el navegador:
-# http://localhost:5500/index.html
-```
-
-O usa `live-server` o cualquier servidor estático de tu preferencia.
-
-2. Inicia el backend (si necesitas funcionalidad de API):
-
-```powershell
-# Asumiendo que tienes Node.js instalado
-node crm-server-final.js
-# Asegúrate que el backend escuche en http://localhost:3000 (según referencias en el frontend)
-```
-
-3. Probar upload desde `index.html`:
-- Abrir `http://localhost:5500/index.html`.
-- Ir a la sección de documento CFE y seleccionar/arrastrar un archivo (PDF o imagen, < 32MB).
-- Verificar en la pestaña Network la petición POST a `https://api.imgbb.com/1/upload` y que devuelva 200.
-- Verificar que el campo oculto `#imgbb-url` se actualiza y que `localStorage.getItem('ultimoDocumentoCFE')` contiene la URL.
-
-4. Probar edición desde `nuevo - copia.html`:
-- Abrir `http://localhost:5500/nuevo%20-%20copia.html` (o el path correcto).
-- En la lista de clientes pulsar "Editar" en un cliente que tenga `imgbb_url` guardado en la base de datos.
-- Verificar que la sección de edición muestra la vista previa del documento y que `#edit-imgbb-url` contiene la URL.
-
-Checklist de troubleshooting
----------------------------
-- Si ves el error `Cannot set properties of null (setting 'value')`:
-  - Asegúrate que el DOM contiene el input con id `edit-link-cfe` y `edit-imgbb-url` (ya se añadió en la versión actual).
-- Si la petición a ImgBB falla:
-  - Revisa la pestaña Network -> la petición POST. Comprueba el body y la URL. Revisa la respuesta JSON.
-  - Revisa la consola (F12) para errores JS u otros errores de CORS / CSP.
-- Si la subida no inicia:
-  - Comprueba que el input file (`#document-upload`) existe y que el event listener está activo.
-
-Notas para el mantenimiento del repositorio
-------------------------------------------
-- Comentarios: el archivo `nuevo - copia.html` cuenta ahora con comentarios JSDoc en las funciones críticas para ser entendible en un repositorio.
-- Testing: añadir tests automáticos o scripts de integración para validar endpoints del backend y el flujo de subida reduciría regresiones.
-- Seguridad: mover la subida de ImgBB al servidor y eliminar la clave del frontend.
-
-Contacto
---------
-Si quieres, puedo:
-- Refactorizar la subida para usar el backend (creo el endpoint y actualizo el frontend).
-- Añadir un pequeño script de pruebas (Node.js) que haga upload de ejemplo a ImgBB para validar la API key fuera del navegador.
-- Añadir más documentación en otras secciones (reportes, auditoría, etc.).
+| Componente | Tecnología | Notas Clave |
+| :--- | :--- | :--- |
+| **Backend (API)** | **Node.js + Express** | Gestión de la API REST, seguridad (JWT, Rate Limiting), y conexión a BD. |
+| **Base de Datos** | **PostgreSQL** | Fuente única de verdad para clientes, usuarios, asesores y auditoría. |
+| **Frontend (UI)** | **HTML/CSS/JS Estático** | Interfaces de usuario para Login, Alta de Clientes y Administración/Edición. |
+| **Hardware** | **ESP32 + RFID (MFRC522)** | Módulo para autenticación por tarjeta RFID, comunicándose con la API vía HTTP. |
 
 ---
-README generado automáticamente por el asistente de desarrollo para facilitar pruebas y revisión del flujo de carga de documentos (CFE).
+
+## 2. 📁 Estructura del Proyecto (Archivos Clave)
+
+| Archivo/Directorio | Descripción | Propósito en el Sistema |
+| :--- | :--- | :--- |
+| **`crm-server-final.js`** | Servidor Principal (Backend) | Expone la API REST, gestiona middleware de seguridad (Helmet, CORS) y sirve archivos estáticos. |
+| **`login.html`** | Frontend: Acceso | Página de login con autenticación estándar y mecanismo de **polling** para RFID. |
+| **`index.html`** | Frontend: Alta de Clientes | Formulario para registrar clientes y subida directa de documentos a **ImgBB** (punto de seguridad crítico). |
+| **`nuevo - copia.html`** | Frontend: Gestión | Panel de administración: listado, edición, reportes PDF (`jspdf`) y visualización de documentos. |
+| **`crm_backup_final.sql`** | Esquema PostgreSQL | Dump completo de la base de datos (tablas, relaciones y datos de muestra iniciales). |
+| **`EP32_LOGIN1.ino`** | Firmware RFID | Código Arduino para ESP32/MFRC522 que llama al endpoint `/api/auth/rfid`. |
+| **`.env.txt` / `.env.production.txt`** | Variables de Entorno | Ejemplos de configuración para desarrollo y producción. Contiene secretos. |
+| **`package.json`** | Scripts y Dependencias | Define comandos de inicio (`start`, `dev`) y lista las dependencias Node.js. |
+
+---
+
+## 3. ⚙️ Requisitos del Sistema
+
+Para la ejecución y el desarrollo de la aplicación se necesitan los siguientes componentes:
+
+* **Node.js**: Versión **v18+** (definido en `package.json/engines`).
+* **PostgreSQL**: Versión **12+** (recomendado).
+* **npm**: Gestor de paquetes.
+* **Hardware (Opcional)**: Placa **ESP32** y módulo **MFRC522** (requerido para la funcionalidad RFID).
+
+---
+
+## 4. 🔑 Variables de Entorno y Configuración de PostgreSQL
+
+El servidor Express utiliza el módulo `dotenv` para cargar variables de entorno. Cree un archivo `.env` a partir de `.env.txt` y añádalo a su `.gitignore`.
+
+| Variable | Descripción | Seguridad |
+| :--- | :--- | :--- |
+| `NODE_ENV` | Entorno de ejecución (`development` / `production`). | **CRÍTICO:** Usar `production` en despliegues en vivo. |
+| `PORT` | Puerto donde escucha el servidor (ej. `3000`). | Asegúrese de mapear este puerto en su *proxy* inverso (ej. Nginx). |
+| `JWT_SECRET` | Clave secreta para firmar los Tokens Web JSON (JWT). | **CRÍTICO:** Debe ser una cadena fuerte, rotada y **NUNCA** comiteada con valores reales. |
+| `DB_USER`/`DB_HOST`/ etc. | Credenciales de conexión a PostgreSQL. | Utilizar contraseñas fuertes y restringir el acceso a la BD por red. |
+
+---
+
+## 5. 🛠️ Instalación y Ejecución Local
+
+### 5.1. Configuración de la Base de Datos
+
+1.  Asegúrese de que su servidor PostgreSQL esté corriendo.
+2.  Cree la base de datos y el usuario definidos en su archivo `.env`.
+3.  **Aplique el Esquema:** Restaure el esquema de la base de datos usando el *dump* proporcionado:
+    ```bash
+    psql -U crm_user -d crm-server-final < crm_backup_final.sql
+    ```
+
+### 5.2. Instalación de Dependencias e Inicio del Servidor
+
+1.  Clonar el repositorio y ejecutar:
+    ```bash
+    npm install
+    ```
+2.  **Ejecutar el Servidor:**
+    * **Desarrollo (Recomendado):** Usa `nodemon`.
+        ```bash
+        npm run dev
+        ```
+    * **Producción / Manual:**
+        ```bash
+        npm run start:prod
+        ```
+
+---
+
+## 6. 🌐 API REST - Endpoints del Servidor (`crm-server-final.js`)
+
+El servidor Express expone una API REST bajo el prefijo `/api/`.
+
+| Categoría | Endpoint | Método | Descripción | Autenticación |
+| :--- | :--- | :--- | :--- | :--- |
+| **Salud** | `/health` | `GET` | **Check de Salud.** Verifica el estado de la aplicación y la conexión a PostgreSQL. | Pública |
+| **Autenticación** | `/api/auth/login` | `POST` | Autenticación con `username`/`password`. Retorna token JWT. | Pública (Rate-Limited) |
+| **Autenticación** | `/api/auth/rfid` | `POST` | **Autenticación por Hardware.** Recibe un UID de RFID. | Pública (Rate-Limited) |
+| **Clientes** | `/api/clientes` | `GET`/`POST` | Listar o Crear un nuevo cliente. | JWT Requerida |
+| **Clientes** | `/api/clientes/:id` | `PUT`/`DELETE` | Actualizar o Eliminar un cliente. **Activa auditoría.** | JWT Requerida |
+| **Auditoría** | `/api/auditoria/clientes` | `GET` | Historial de auditoría de clientes. | Admin |
+
+---
+
+## 7. 🤖 Integración de Hardware (ESP32/RFID)
+
+El módulo **ESP32/MFRC522** se comunica con el *backend* de forma directa.
+
+* **Firmware (`EP32_LOGIN1.ino`):** Realiza un **HTTP POST** al endpoint `/api/auth/rfid`. La constante `SERVER_URL` debe ser actualizada a la URL de dominio de producción.
+* **Control de Estado:** El firmware implementa una lógica de **`debounce` de 5 segundos** entre lecturas del *mismo UID* para evitar sobrecarga del servidor.
+* **Polling (Frontend):** La función `iniciarPollingRFIDLogin()` en `login.html` consulta el estado del último UID procesado por el ESP32 cada **2 segundos**.
+
+---
+
+## 8. 💻 Frontend: Puntos Críticos y Funcionalidad
+
+| Archivo | Funcionalidad Clave | Nota de Seguridad Crítica |
+| :--- | :--- | :--- |
+| **`index.html`** | Formulario de Alta de Cliente. | La clave API de ImgBB está expuesta en el código. **Recomendación:** Migrar la subida de archivos al **Backend** para ocultar la clave. |
+| **`login.html`** | Autenticación Estándar y RFID. | Lógica de `polling` y `resetearEstadoRFID()` para la comunicación con el hardware. |
+| **`nuevo - copia.html`** | Listado, Edición y Reportes. | Utiliza `jspdf` para generación de documentos y gestión de *modals* de edición. |
+
+---
+
+## 9. 📜 Scripts de Ejecución Disponibles (`package.json`)
+
+| Script | Comando | Propósito |
+| :--- | :--- | :--- |
+| `npm start` | `node crm-server-final.js` | Inicio simple del servidor. |
+| `npm run dev` | `nodemon crm-server-final.js` | Desarrollo: Inicia con recarga automática. |
+| `npm run production` | `NODE_ENV=production node ...` | Producción (Estilo POSIX). |
+| `npm run start:prod` | `node crm-server-final.js` | Alternativa de producción (asume que `NODE_ENV` está seteado externamente). |
+
+---
+
+## 10. 🛡️ Seguridad, Despliegue y Mantenimiento
+
+* **HTTPS:** El despliegue a producción requiere un **Certificado SSL** y un **Proxy Inverso** (Nginx/Load Balancer).
+* **Auditoría de IP:** La función `obtenerIPReal(req)` requiere que el Proxy Inverso envíe la cabecera **`X-Forwarded-For`** para registrar IPs reales en la base de datos.
+* **Seguridad:** El proyecto usa **Helmet** para *headers* de seguridad, **express-rate-limit** y **JWT** para autenticación.
+
+### Historial de Cambios (Changelog Breve)
+
+**FASE 17 (04-11-2025)**
+
+* **Documentación:** Añadidos comentarios **JSDoc** exhaustivos en archivos clave del Frontend y Backend.
+* **Seguridad:** Añadidas recomendaciones de seguridad en variables de entorno y migración de claves de terceros.
+* **Funcionalidad:** Implementación final de la lógica de *polling* RFID en `login.html`.
