@@ -144,6 +144,13 @@ Para reportar issues o solicitar soporte técnico, contactar al equipo de desarr
 * **Auditoría de IP:** La función `obtenerIPReal(req)` requiere que el Proxy Inverso envíe la cabecera **`X-Forwarded-For`** para registrar IPs reales en la base de datos.
 * **Seguridad:** El proyecto usa **Helmet** para *headers* de seguridad, **express-rate-limit** y **JWT** para autenticación.
 
+##Soporte y Contacto
+Para reportar issues o solicitar soporte técnico, contactar al equipo de desarrollo.
+
+¡CRM Solarever - Potenciando tu gestión de clientes! 🚀
+
+
+
 
 
 
